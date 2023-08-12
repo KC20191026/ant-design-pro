@@ -21,6 +21,7 @@ import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
+import Cookies from 'js-cookie';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -119,6 +120,10 @@ const Login: React.FC = () => {
       // 登录
       const msg = await login({ ...values, type });
       if (msg.status === 'ok') {
+
+        // 时间单位是天 1/24为一个小时
+        Cookies.set('token', msg?.token, { expires: 1 });
+        // 第三个参数不传就是永不过期
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -167,7 +172,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
+          title="小小机器人"
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
             autoLogin: true,

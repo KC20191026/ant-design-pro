@@ -52,6 +52,94 @@ export default [
     component: './TableList',
   },
   {
+    name: 'store',
+    path: '/config',
+    icon: 'smile',
+    component: './Stores',
+  },
+  {
+    name: 'message',
+    path: '/message',
+    // icon: 'smile',
+    routes: [
+      {
+        name: 'groupSPY',
+        path: '/message/listen',
+        component: './Control/Listen',
+      },
+      {
+        name: 'groupRPY',
+        path: '/message/noreply',
+        component: './Control/NOReply',
+      },
+      {
+        name: 'privateRPY',
+        path: '/message/private',
+        component: './Control/Private',
+      }
+    ]
+  },
+  {
+    name: 'plugins',
+    path: '/plugins',
+    icon: 'crown',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/plugins',
+        redirect: '/plugins/all',
+      },
+      {
+        name: 'all',
+        path: '/plugins/all',
+        component: './Plugins',
+      },
+      {
+        name: 'rule',
+        path: '/plugins/rule',
+        component: './Plugins',
+      },
+      {
+        name: 'module',
+        path: '/plugins/module',
+        component: './Plugins',
+      },
+      {
+        name: 'server',
+        path: '/plugins/server',
+        component: './Plugins',
+      },
+      {
+        name: 'cron',
+        path: '/plugins/cron',
+        component: './Plugins',
+      },
+    ],
+  },
+  {
+    name: 'scripts',
+    icon: 'smile',
+    path: '/scripts',
+    layout: true,
+    routes: [
+      {
+        path: '/scripts',
+        redirect: '/scripts/:id',
+      },
+      {
+        name: 'new',
+        path: '/scripts/new',
+        component: './Scripts',
+      },
+      {
+        name: '',
+        path: '/scripts/:id',
+        layout: false,
+        component: './Scripts',
+      },
+    ],
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

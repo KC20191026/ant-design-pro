@@ -152,4 +152,6 @@ export default defineConfig({
     strategy: 'normal',
   },
   requestRecord: {},
+  // base: process.env.NODE_ENV === 'production' ? '/admin/' : '/',
+  // publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/'
 });
