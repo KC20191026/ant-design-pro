@@ -28,39 +28,57 @@ export default [
     icon: 'smile',
     component: './Welcome',
   },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
-      },
-    ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
+  // {
+  //   path: '/admin',
+  //   name: 'admin',
+  //   icon: 'crown',
+  //   access: 'canAdmin',
+  //   routes: [
+  //     {
+  //       path: '/admin',
+  //       redirect: '/admin/sub-page',
+  //     },
+  //     {
+  //       path: '/admin/sub-page',
+  //       name: 'sub-page',
+  //       component: './Admin',
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: 'list.table-list',
+  //   icon: 'table',
+  //   path: '/list',
+  //   component: './TableList',
+  // },
   {
     name: 'store',
     path: '/config',
-    icon: 'smile',
+    icon: 'database',
+    component: './Stores',
+  },
+  {
+    name: 'master',
+    path: '/master',
+    icon: 'key',
+    component: './Master',
+  },
+  {
+    name: 'reply',
+    path: '/reply',
+    icon: 'retweet',
+    component: './Reply',
+  },
+  {
+    name: 'carry',
+    path: '/carry',
+    icon: 'swap',
     component: './Stores',
   },
   {
     name: 'message',
     path: '/message',
-    // icon: 'smile',
+    icon: 'message',
     routes: [
       {
         name: 'groupSPY',
@@ -118,7 +136,7 @@ export default [
   },
   {
     name: 'scripts',
-    icon: 'smile',
+    icon: 'edit',
     path: '/scripts',
     layout: true,
     routes: [

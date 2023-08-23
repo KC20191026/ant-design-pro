@@ -1,14 +1,13 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
-import { bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
+import { editBucketName, masterList } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
 
 
 type DataSourceType = {
   id: React.Key;
-  name: string;
   from?: string;
   // decs?: string;
-  enable?: boolean;
+  code?: any;
 };
 
 const Welcome: React.FC = () => {
@@ -16,16 +15,13 @@ const Welcome: React.FC = () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
 
-  let name = "noReplylist"
-  bucketNameList(name).then(data => {
+  masterList().then((data) => {
     let array = data.data
     let list: DataSourceType[] = []
     if (array) {
       for (let index = 0; index < array?.length; index++) {
         const element = array[index];
-        const from = element.key.split(':')[0]
-        const id = element.key.split(':')[1]
-        list.push({ id: id, from: from, name: name, enable: element.value })
+        list.push({ id: index + 1, from: element.name, code: element.value })
       }
     }
     if (dataSource.length === 0)
@@ -34,34 +30,28 @@ const Welcome: React.FC = () => {
 
   const columns: ProColumns<DataSourceType>[] = [
     {
-      title: '群号',
+      title: '编号',
       dataIndex: 'id',
       width: '15%',
+      editable: false,
     },
-    // {
-    //   title: '群称',
-    //   width: '15%',
-    //   editable: false,
-    //   dataIndex: 'name',
-    // },
     {
       title: '平台',
-      // editable: false,
       dataIndex: 'from',
     },
+    {
+      title: '号码',
+      dataIndex: 'code',
+    },
     // {
-    //   title: '备注',
+    //   title: '昵称',
     //   dataIndex: 'decs',
     // },
-    {
-      title: '状态',
-      dataIndex: 'enable',
-    },
     {
       title: '操作',
       valueType: 'option',
       width: 200,
-      render: (text: any, record: { id: string; name: string; key: any; }, _: any, action: { startEditable: (arg0: any) => void; }) => [
+      render: (text: any, record: { id: string; name: string; key: any; from: string }, _: any, action: { startEditable: (arg0: any) => void; }) => [
         <a
           key="editable"
           onClick={() => {
@@ -74,7 +64,7 @@ const Welcome: React.FC = () => {
           key="delete"
           onClick={async () => {
             setDataSource(dataSource.filter((item) => item.id !== record.id));
-            let result = await editBucketName(record.name, { key: record.key, value: "" })
+            let result = await editBucketName(record.from, { key: "admin", value: "" })
             if (result.data.status === 200) {
               console.log("删除数据", record)
             }
@@ -117,12 +107,12 @@ const Welcome: React.FC = () => {
           editableKeys,
           onSave: async (rowKey, data, row) => {
             let body = {
-              name: `${data.name}`,
-              key: `${data.from}:${data.id}`,
-              value: `${data.enable}`
+              name: `${data.from}`,
+              key: `admin`,
+              value: `${data.code}`
             }
             // console.log(rowKey, data, row);
-            let result = await editBucketName(name, body)
+            let result = await editBucketName(`${data.from}`, body)
             if (result.data.status === 200) {
               console.log("添加成功")
             }
@@ -136,4 +126,3 @@ const Welcome: React.FC = () => {
 }
 
 export default Welcome;
-

@@ -95,11 +95,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ],
     links: isDev
       ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
+        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+          <LinkOutlined />
+          <span>OpenAPI 文档</span>
+        </Link>,
+      ]
       : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
@@ -132,11 +132,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             icon={<CustomerServiceOutlined />}
           />
 
-          <Drawer title="调试插件" placement="right" onClose={onClose} open={open} mask={false}>
-            <IM style={{ right: 194 }} ></IM>
+          <Drawer title="" placement="right" onClose={onClose} open={open} mask={false}>
+            <IM></IM>
           </Drawer>
 
-          {/* <SettingDrawer
+          {<SettingDrawer
             disableUrlParams
             enableDarkTheme
             settings={initialState?.settings}
@@ -146,7 +146,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 settings,
               }));
             }}
-          /> */}
+          />}
         </>
       );
     },

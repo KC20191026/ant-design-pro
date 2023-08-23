@@ -1,7 +1,6 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
-import { bucketList, bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
+import { bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
-import { Select } from 'antd';
 
 
 type DataSourceType = {

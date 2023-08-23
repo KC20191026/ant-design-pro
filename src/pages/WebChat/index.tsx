@@ -68,9 +68,6 @@ const IM = () => {
 
   }
 
-
-
-
   let webSocketAddr = process.env.NODE_ENV === 'production' ? `ws://${window.location.host}/api/ws` : `ws://localhost:9090/api/ws`
   const ws = new WebSocket(webSocketAddr);
   ws.onopen = function (e) {

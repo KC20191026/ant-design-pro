@@ -18,6 +18,14 @@ export async function bucketNameList(name: string, options?: {}) {
   });
 }
 
+/** 获取管理员列表 GET /api/bucket */
+export async function masterList(options?: {}) {
+  return request<{ data: any; }>('/api/master/list', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** 修改一条数据 POST /api/bucket/:name */
 export async function editBucketName(name: string, body: {}, options?: {}) {
   return request<{ data: any; }>('/api/bucket/' + name, {

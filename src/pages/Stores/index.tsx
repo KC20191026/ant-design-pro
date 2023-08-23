@@ -6,9 +6,10 @@ import { Select } from 'antd';
 
 type DataSourceType = {
   id: React.Key;
+  num: number;
   name: string;
   key?: string;
-  value?: string;
+  value?: any;
 
 };
 
@@ -27,7 +28,7 @@ function onSelect(option: any, setName: { (value: React.SetStateAction<string>):
       for (let index = 0; index < array?.length; index++) {
         const element = array[index];
         // console.log(element)
-        list.push({ id: (Math.random() * 1000000).toFixed(0), name: name, key: element.key, value: element.value })
+        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: element.value })
       }
     }
     setDataSource(list)
@@ -58,6 +59,12 @@ const Welcome: React.FC = () => {
 
   const columns: ProColumns<DataSourceType>[] = [
     {
+      title: '序号',
+      dataIndex: 'num',
+      width: '5%',
+      editable: false,
+    },
+    {
       title: '存储桶',
       dataIndex: 'name',
       formItemProps: (form: any, { rowIndex }: any) => {
@@ -67,11 +74,11 @@ const Welcome: React.FC = () => {
       },
       // 第一行不允许编辑
       editable: false,
-      width: '15%',
+      width: '10%',
     },
     {
       title: '键名',
-      width: '15%',
+      width: '30%',
       dataIndex: 'key',
     },
     {
@@ -126,8 +133,8 @@ const Welcome: React.FC = () => {
         }
         options={options}
       />
-      <br/>
-      <br/>
+      <br />
+      <br />
       <EditableProTable<DataSourceType>
         rowKey="id"
         headerTitle=""
