@@ -1,6 +1,7 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
 import { bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
+import { Switch } from 'antd';
 
 
 type DataSourceType = {
@@ -8,7 +9,7 @@ type DataSourceType = {
   name: string;
   from?: string;
   // decs?: string;
-  enable?: boolean;
+  enable?: any;
 };
 
 const Welcome: React.FC = () => {
@@ -56,12 +57,15 @@ const Welcome: React.FC = () => {
     {
       title: '状态',
       dataIndex: 'enable',
+      render: (text, record) => (
+        <Switch checkedChildren='' unCheckedChildren='' checked={record.enable == 'true' ? true : false} />
+      ),
     },
     {
       title: '操作',
       valueType: 'option',
       width: 200,
-      render: (text: any, record: { id: string; name: string; key: any; }, _: any, action: { startEditable: (arg0: any) => void; }) => [
+      render: (text, record, _: any, action: { startEditable: (arg0: any) => void; }) => [
         <a
           key="editable"
           onClick={() => {
@@ -74,7 +78,7 @@ const Welcome: React.FC = () => {
           key="delete"
           onClick={async () => {
             setDataSource(dataSource.filter((item) => item.id !== record.id));
-            let result = await editBucketName(record.name, { key: record.key, value: "" })
+            let result = await editBucketName(record.name, { key: `${record.from}:${record.id}`, value: "" })
             if (result.data.status === 200) {
               console.log("删除数据", record)
             }
