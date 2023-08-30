@@ -1,7 +1,7 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
 import { bucketList, bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
-import { Select } from 'antd';
+import { Select, Modal, message } from 'antd';
 
 
 type DataSourceType = {
@@ -28,7 +28,7 @@ function onSelect(option: any, setName: { (value: React.SetStateAction<string>):
       for (let index = 0; index < array?.length; index++) {
         const element = array[index];
         // console.log(element)
-        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: element.value })
+        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: typeof element.value == 'string' ? element.value : JSON.stringify(element.value) })
       }
     }
     setDataSource(list)
@@ -37,12 +37,14 @@ function onSelect(option: any, setName: { (value: React.SetStateAction<string>):
 }
 
 const Welcome: React.FC = () => {
-
+  const [messageApi, contextHolder] = message.useMessage();
   const [options, setOptions] = useState([]);
   const [name, setName] = useState("");
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   bucketList().then((data) => {
     let array = data.data
@@ -84,6 +86,12 @@ const Welcome: React.FC = () => {
     {
       title: '值',
       dataIndex: 'value',
+      render: (text, record) => {
+        if (record.value?.length > 100) {
+          return (<a onClick={() => showModal(text)}>{record.value?.substr(0, 100)}...</a>);
+        }
+        return text;
+      },
     },
     {
       title: '操作',
@@ -114,6 +122,15 @@ const Welcome: React.FC = () => {
     },
   ];
 
+  const showModal = (content: any) => {
+    setModalVisible(true);
+    setModalContent(content);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setModalContent('');
+  };
   return (
     <PageContainer>
       <Select
@@ -165,14 +182,23 @@ const Welcome: React.FC = () => {
           onSave: async (rowKey, data, row) => {
             // console.log(rowKey, data, row);
             let result = await editBucketName(name, data)
-            if (result.data.status === 200) {
-              console.log("添加成功")
+            if (result.status === 200) {
+              messageApi.open({
+                type: 'success',
+                content: '保存成功！',
+              });
             }
           },
           onChange: setEditableRowKeys
 
         }}
       />
+      <div>
+        <Modal title="" visible={modalVisible} onCancel={closeModal} footer={null}>
+          <br />
+          <p>{modalContent}</p>
+        </Modal>
+      </div>
     </PageContainer>
   )
 }

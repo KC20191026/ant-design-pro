@@ -28,7 +28,9 @@ export async function masterList(options?: {}) {
 
 /** 修改一条数据 POST /api/bucket/:name */
 export async function editBucketName(name: string, body: {}, options?: {}) {
-  return request<{ data: any; }>('/api/bucket/' + name, {
+  return request<{
+    status: number; data: any; 
+}>('/api/bucket/' + name, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

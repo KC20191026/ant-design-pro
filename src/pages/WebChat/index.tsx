@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import '@chatui/core/es/styles/index.less';
 // 引入组件
-import Chat, { Bubble, useMessages } from '@chatui/core';
+import Chat, { Bubble, QuickReplyItemProps, useMessages } from '@chatui/core';
 // 引入样式
 import '@chatui/core/dist/index.css';
 // 引入定制的样式
@@ -10,7 +10,7 @@ import './chatui-theme.css';
 
 const IM = () => {
   const { messages, appendMsg, setTyping } = useMessages([]);
-
+  const [dynamicQuickReplies, setDynamicQuickReplies] = useState([]);
   function getChatMessage(str: any) {
     let reg = /\[CQ:image.*\]/ig
     let num = str.search(reg)
@@ -92,9 +92,9 @@ const IM = () => {
     console.log('ws 连接关闭了');
   }
 
-
   function handleSend(type: string, val: string) {
     if (type === 'text' && val.trim()) {
+      setDynamicQuickReplies([{ name: val }, ...dynamicQuickReplies])
       appendMsg({
         type: 'text',
         content: { text: val },
@@ -120,13 +120,13 @@ const IM = () => {
       case 'image':
         return (
           <Bubble type="image">
-            <img src={content.picUrl} alt="" />
+            <img style={{ width: 'auto', height: 'auto' }} src={content.picUrl} alt="" />
           </Bubble>
         );
       case 'video':
         return (
           <Bubble type="video">
-            <video src={content.videoUrl} />
+            <video style={{ width: '100%', height: '8%' }} src={content.videoUrl} />
           </Bubble>
         );
       default:
@@ -136,7 +136,10 @@ const IM = () => {
 
   return (
     <Chat
-      navbar={{ title: 'KC助理' }}
+      quickReplies={dynamicQuickReplies}
+      onQuickReplyClick={((item: QuickReplyItemProps, index: number) => {
+        handleSend('text', item.name)
+      })}
       messages={messages}
       renderMessageContent={renderMessageContent}
       onSend={handleSend}

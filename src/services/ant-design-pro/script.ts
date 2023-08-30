@@ -5,6 +5,7 @@ import { request } from '@umijs/max';
 /** 获取插件详情 GET /api/script */
 export async function getPlugin(id:string, options?: {}) {
   return request<{
+    status: number;
     data: API.Result;
   }>('/api/script/' + id, {
     method: 'GET',

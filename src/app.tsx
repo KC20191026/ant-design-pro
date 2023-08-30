@@ -102,6 +102,17 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       ]
       : [],
     menuHeaderRender: undefined,
+    menuContentRender: (props, defaultDom) => {
+      // console.log(props.menuData)
+      props.menuData?.forEach(menu => {
+        if (menu.path == '/scripts') {
+          initialState?.currentUser?.plugins?.forEach((p: { path: any; name: any; }) => {
+            menu.children?.push({ id: p.path, parentId: "19", path: p.path, key: p.path, name: p.name, layout: true, })
+          });
+        }
+      });
+      return defaultDom
+    },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
@@ -132,7 +143,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             icon={<CustomerServiceOutlined />}
           />
 
-          <Drawer title="" placement="right" onClose={onClose} open={open} mask={false}>
+          <Drawer title="" placement="right" onClose={onClose} open={open} mask={false} width={450} style={{ height: '100%', overflow: 'auto', background: '#eee' }}>
             <IM></IM>
           </Drawer>
 

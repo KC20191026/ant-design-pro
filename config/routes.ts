@@ -73,7 +73,7 @@ export default [
     name: 'carry',
     path: '/carry',
     icon: 'swap',
-    component: './Stores',
+    component: './Carry',
   },
   {
     name: 'message',
