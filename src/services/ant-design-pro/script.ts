@@ -25,6 +25,7 @@ export async function deletePlugin(id:string, options?: {}) {
 /** 修改一条数据 POST /api/script/:id */
 export async function editPlugin(id: string, data :string, options?: {}) {
   return request<{
+    status: number;
     data: API.Result;
   }>('/api/script/' + id, {
     method: 'POST',

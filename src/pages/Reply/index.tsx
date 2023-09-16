@@ -1,6 +1,7 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
 import { bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
+import { message } from 'antd';
 
 
 type DataSourceType = {
@@ -53,7 +54,7 @@ const Welcome: React.FC = () => {
       title: '操作',
       valueType: 'option',
       width: 200,
-      render: (text: any, record: { id: string; }, _: any, action: { startEditable: (arg0: any) => void; }) => [
+      render: (text: any, record: any, _: any, action: any) => [
         <a
           key="editable"
           onClick={() => {
@@ -66,9 +67,10 @@ const Welcome: React.FC = () => {
           key="delete"
           onClick={async () => {
             setDataSource(dataSource.filter((item) => item.id !== record.id));
-            let result = await editBucketName(name, { key: record.id, value: "" })
-            if (result.data.status === 200) {
+            let result = await editBucketName([{ name, key: record.id, value: "" }])
+            if (result.status === 200) {
               console.log("删除数据", record)
+              message.success('删除成功!', 1)
             }
           }}
         >
@@ -108,15 +110,16 @@ const Welcome: React.FC = () => {
           type: 'multiple',
           editableKeys,
           onSave: async (rowKey, data, row) => {
-            let body = {
+            let body = [{
               name: name,
               key: `${data.id || crypto.randomUUID()}`,
               value: { "groupId": `${data.code}`, "from": `${data.from}`, "listen": `${data.listen}`, "reply": `${data.reply}` }
-            }
+            }]
             // console.log(rowKey, data, row);
-            let result = await editBucketName(name, body)
+            let result = await editBucketName(body)
             if (result.data.status === 200) {
-              console.log("添加成功")
+              console.log("保存成功")
+              message.success('保存成功!', 1)
             }
           },
           onChange: setEditableRowKeys

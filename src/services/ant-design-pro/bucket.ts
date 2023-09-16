@@ -26,11 +26,19 @@ export async function masterList(options?: {}) {
   });
 }
 
+/** 获取搬运群组列表 GET /api/carry/groups */
+export async function carryList(options?: {}) {
+  return request<{ data: any; }>('/api/carry/groups', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** 修改一条数据 POST /api/bucket/:name */
-export async function editBucketName(name: string, body: {}, options?: {}) {
+export async function editBucketName(body: {}, options?: {}) {
   return request<{
-    status: number; data: any; 
-}>('/api/bucket/' + name, {
+    status: number; data: any;
+  }>('/api/bucket', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,4 +48,30 @@ export async function editBucketName(name: string, body: {}, options?: {}) {
   });
 }
 
+/** 修改一条数据 POST /api/carry/group */
+export async function editCarryGroup(body: {}, options?: {}) {
+  return request<{
+    status: number; data: any;
+  }>('/api/carry/group', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
+/** 删除一条数据 DELETE /api/carry/group */
+export async function delCarryGroup(body: {}, options?: {}) {
+  return request<{
+    status: number; data: any;
+  }>('/api/carry/group', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

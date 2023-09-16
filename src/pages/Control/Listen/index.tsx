@@ -1,7 +1,7 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
 import { bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
-import { Switch } from 'antd';
+import { Alert, Switch, message } from 'antd';
 
 
 type DataSourceType = {
@@ -57,6 +57,9 @@ const Welcome: React.FC = () => {
     {
       title: '状态',
       dataIndex: 'enable',
+      // readonly: true,
+      // disable: true,
+      valueType: 'switch',
       render: (text, record) => (
         <Switch checkedChildren='' unCheckedChildren='' checked={record.enable == 'true' ? true : false} />
       ),
@@ -65,7 +68,7 @@ const Welcome: React.FC = () => {
       title: '操作',
       valueType: 'option',
       width: 200,
-      render: (text, record, _: any, action: { startEditable: (arg0: any) => void; }) => [
+      render: (text, record, _: any, action: any) => [
         <a
           key="editable"
           onClick={() => {
@@ -78,20 +81,23 @@ const Welcome: React.FC = () => {
           key="delete"
           onClick={async () => {
             setDataSource(dataSource.filter((item) => item.id !== record.id));
-            let result = await editBucketName(record.name, { key: `${record.from}:${record.id}`, value: "" })
-            if (result.data.status === 200) {
+            let result = await editBucketName([{ name: record.name, key: `${record.from}:${record.id}`, value: "" }])
+            if (result.status === 200) {
               console.log("删除数据", record)
+              message.success('删除成功!', 1)
             }
           }}
         >
           删除
-        </a>,
+        </a >,
       ],
     },
   ];
 
   return (
     <PageContainer>
+      <Alert message="安全起见，群聊消息默认不会被监听处理，你可以在这里添加你想要接收处理消息的群聊，也可以直接在群聊中使用listen和unlisten开启和关闭。" type="info" />
+      <br />
       <EditableProTable<DataSourceType>
         rowKey="id"
         headerTitle=""
@@ -120,15 +126,15 @@ const Welcome: React.FC = () => {
           type: 'multiple',
           editableKeys,
           onSave: async (rowKey, data, row) => {
-            let body = {
+            let body = [{
               name: `${data.name}`,
               key: `${data.from}:${data.id}`,
               value: `${data.enable}`
-            }
+            }]
             // console.log(rowKey, data, row);
-            let result = await editBucketName(name, body)
-            if (result.data.status === 200) {
-              console.log("添加成功")
+            let result = await editBucketName(body)
+            if (result.status === 200) {
+              message.success('保存成功!', 1)
             }
           },
           onChange: setEditableRowKeys

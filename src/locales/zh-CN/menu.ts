@@ -1,11 +1,11 @@
 export default {
-  'menu.welcome': '欢迎',
+  'menu.welcome': '首页简介',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.store': '存储管理',
   'menu.master': '权限管理',
   'menu.reply': '自动回复',
-  'menu.carry': '搬运设置',
+  'menu.carry': '搬运配置',
   'menu.message': '消息管理',
   'menu.message.groupSPY': '群消息监听',
   'menu.message.groupRPY': '群回复拦截',

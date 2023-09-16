@@ -27,6 +27,8 @@ const IM = () => {
         return [[`[CQ:image,file=${str.path}\]`], '']
       } else if (str?.type == 'video') {
         return [[`[CQ:video,file=${str.path}\]`], '']
+      } else if (str?.type == 'audio') {
+        return [[`[CQ:audio,file=${str.path}\]`], '']
       }
     } catch (e) { }
     return [null, str]
@@ -40,6 +42,8 @@ const IM = () => {
         var arr = element.match(reg)
         reg = /\[CQ:video,file=(.*)\]/
         var arr2 = element.match(reg)
+        reg = /\[CQ:audio,file=(.*)\]/
+        var arr3 = element.match(reg)
         if (arr && arr.length > 1) {
           // console.log(arr[1])
           appendMsg({
@@ -54,6 +58,14 @@ const IM = () => {
             type: 'video',
             content: {
               videoUrl: arr2[1],
+            },
+          })
+        } else if (arr3 && arr3.length > 1) {
+          // console.log(arr3[1])
+          appendMsg({
+            type: 'audio',
+            content: {
+              audioUrl: arr3[1],
             },
           })
         } else {
@@ -127,6 +139,12 @@ const IM = () => {
         return (
           <Bubble type="video">
             <video style={{ width: '100%', height: '8%' }} src={content.videoUrl} />
+          </Bubble>
+        );
+      case 'audio':
+        return (
+          <Bubble type="audio">
+            <audio style={{ width: '100%', height: '8%' }} src={content.audioUrl} />
           </Bubble>
         );
       default:

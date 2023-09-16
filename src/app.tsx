@@ -106,8 +106,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // console.log(props.menuData)
       props.menuData?.forEach(menu => {
         if (menu.path == '/scripts') {
+          let id = menu.children?.[0].id
           initialState?.currentUser?.plugins?.forEach((p: { path: any; name: any; }) => {
-            menu.children?.push({ id: p.path, parentId: "19", path: p.path, key: p.path, name: p.name, layout: true, })
+            menu.children?.push(
+              {
+                element: menu.children?.[0].element,
+                id: ++id + '',
+                path: p.path,
+                key: p.path,
+                name: p.name,
+                layout: true,
+                parentId: menu.children?.[0].parentId,
+                pro_layout_parentKeys: menu.children?.[0].pro_layout_parentKeys,
+                unaccessible: false,
+              })
           });
         }
       });

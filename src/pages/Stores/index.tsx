@@ -1,7 +1,7 @@
 import { EditableProTable, PageContainer, ProColumns } from '@ant-design/pro-components';
 import { bucketList, bucketNameList, editBucketName } from '@/services/ant-design-pro/bucket';
 import React, { useState } from 'react';
-import { Select, Modal, message } from 'antd';
+import { Select, Modal, message, Button } from 'antd';
 
 
 type DataSourceType = {
@@ -10,16 +10,13 @@ type DataSourceType = {
   name: string;
   key?: string;
   value?: any;
-
+  type: string;
 };
 
-
-function onSelect(option: any, setName: { (value: React.SetStateAction<string>): void; (arg0: any): void; }, setDataSource: { (value: React.SetStateAction<readonly DataSourceType[]>): void; (arg0: DataSourceType[]): void; }) {
-  // console.log(option)
-  let name = option.label.replace("[桶]", "")
+function onSelect(name: any, setName: any, setDataSource: any) {
+  // console.log(name)
   //获取列表
   setName(name)
-  setDataSource([])
   bucketNameList(name).then(data => {
     // console.log(data)
     let array = data.data
@@ -28,30 +25,28 @@ function onSelect(option: any, setName: { (value: React.SetStateAction<string>):
       for (let index = 0; index < array?.length; index++) {
         const element = array[index];
         // console.log(element)
-        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: typeof element.value == 'string' ? element.value : JSON.stringify(element.value) })
+        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: typeof element.value == 'string' ? element.value : JSON.stringify(element.value), type: typeof element.value })
       }
     }
     setDataSource(list)
   })
-
 }
 
 const Welcome: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage();
   const [options, setOptions] = useState([]);
   const [name, setName] = useState("");
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  const [selectedValue, setSelectedValue] = useState(undefined);
 
   bucketList().then((data) => {
     let array = data.data
     let list = []
     for (let index = 0; index < array?.length; index++) {
       const element = array[index]
-      list.push({ value: index, name: element, label: `[桶]${element}` })
+      list.push({ value: index, name: element, label: `[桶] ${element}` })
     }
     if (options.length === 0) {
       setOptions(list)
@@ -74,8 +69,7 @@ const Welcome: React.FC = () => {
           rules: rowIndex > 1 ? [{ required: true, message: '此项为必填项' }] : [],
         };
       },
-      // 第一行不允许编辑
-      editable: false,
+      // editable: false,
       width: '10%',
     },
     {
@@ -86,6 +80,7 @@ const Welcome: React.FC = () => {
     {
       title: '值',
       dataIndex: 'value',
+      valueType: 'textarea',
       render: (text, record) => {
         if (record.value?.length > 100) {
           return (<a onClick={() => showModal(text)}>{record.value?.substr(0, 100)}...</a>);
@@ -97,7 +92,7 @@ const Welcome: React.FC = () => {
       title: '操作',
       valueType: 'option',
       width: 200,
-      render: (text: any, record: { id: React.Key; name: string; key: any; }, _: any, action: { startEditable: (arg0: any) => void; }) => [
+      render: (text: any, record: any, _: any, action: any) => [
         <a
           key="editable"
           onClick={() => {
@@ -110,9 +105,10 @@ const Welcome: React.FC = () => {
           key="delete"
           onClick={async () => {
             setDataSource(dataSource.filter((item) => item.id !== record.id));
-            let result = await editBucketName(record.name, { key: record.key, value: "" })
-            if (result.data.status === 200) {
-              console.log("删除数据", record)
+            let result = await editBucketName([{ name: record.name, key: record.key, value: "" }])
+            if (result.status === 200) {
+              onSelect(selectedValue, setName, setDataSource)
+              message.success('删除成功！', 1)
             }
           }}
         >
@@ -131,6 +127,7 @@ const Welcome: React.FC = () => {
     setModalVisible(false);
     setModalContent('');
   };
+
   return (
     <PageContainer>
       <Select
@@ -144,30 +141,25 @@ const Welcome: React.FC = () => {
         }
         onSelect={
           (value, option) => {
-            onSelect(option, setName, setDataSource)
+            setSelectedValue(option.name)
+            onSelect(option.name, setName, setDataSource)
           }
-
         }
         options={options}
       />
+      {dataSource.length > 0 && <Button type="primary" onClick={() => { onSelect(selectedValue, setName, setDataSource) }}>刷新</Button>}
       <br />
       <br />
-      <EditableProTable<DataSourceType>
+      {dataSource.length > 0 && <EditableProTable<DataSourceType>
         rowKey="id"
         headerTitle=""
         scroll={{
           x: 960,
         }}
-        recordCreatorProps={
-          position !== 'hidden'
-            ? {
-              position: position as 'top',
-              record: () => ({ id: (Math.random() * 1000000).toFixed(0), name: name }),
-            }
-            : false
-        }
+        recordCreatorProps={{
+          record: { id: (Math.random() * 1000000).toFixed(0), name: name, num: dataSource.length + 1, type: '' },
+        }}
         loading={false}
-
         columns={columns}
         // request={async () => ({
         //   data: defaultData,
@@ -181,20 +173,25 @@ const Welcome: React.FC = () => {
           editableKeys,
           onSave: async (rowKey, data, row) => {
             // console.log(rowKey, data, row);
-            let result = await editBucketName(name, data)
+            let list = []
+            if (data.type == 'object') data.value = JSON.parse(data.value)
+            if (data.key != row.key || data.name != row.name) {
+              list = [{ name: row.name, key: row.key, value: '' }, { name: data.name, key: data.key, value: data.value }]
+            } else {
+              list = [{ name: data.name, key: data.key, value: data.value }]
+            }
+            let result = await editBucketName(list)
             if (result.status === 200) {
-              messageApi.open({
-                type: 'success',
-                content: '保存成功！',
-              });
+              // onSelect(selectedValue, setName, setDataSource)
+              message.success('保存成功！', 1)
             }
           },
           onChange: setEditableRowKeys
 
         }}
-      />
+      />}
       <div>
-        <Modal title="" visible={modalVisible} onCancel={closeModal} footer={null}>
+        <Modal title="" open={modalVisible} onCancel={closeModal} footer={null}>
           <br />
           <p>{modalContent}</p>
         </Modal>

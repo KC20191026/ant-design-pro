@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import moment from 'moment';
 import { useParams } from 'umi';
@@ -41,7 +41,7 @@ const Welcome: React.FC = () => {
         // console.log("走默认")
       } else {
         getPlugin(params.id).then((data) => {
-          console.log(data)
+          // console.log(data)
           if (data.status === 200) {
             setTitle(data.data.title)
             editor.setValue(data.data.content)
@@ -63,7 +63,7 @@ const Welcome: React.FC = () => {
         title: title,
         extra: [
           <Button key="1" type="primary" style={{ float: "right", margin: 10 }} onClick={async () => {
-            let data = editorRef.current.getValue()
+            let data = editorRef?.current?.getValue()
             if (params.id) {
               let result = await editPlugin(params.id, data)
               if (result.status === 200) {
@@ -89,7 +89,7 @@ const Welcome: React.FC = () => {
         <Button type="primary" style={{ float: "right", margin: 10 }} >保存</Button>
       </div> */}
 
-      <Editor height="67vh" defaultLanguage="javascript" defaultValue={defaultContent} theme="vs-light" options={{ fontSize: 12, }}
+      <Editor height="80vh" defaultLanguage="javascript" defaultValue={defaultContent} theme="vs-light" options={{ fontSize: 12, }}
         onChange={handleEditorChange} onMount={handleEditorDidMount} />
     </PageContainer>
   );

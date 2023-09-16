@@ -1,11 +1,10 @@
 import { ProList } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
-import { request } from '@umijs/max';
+import { Space, Tag } from 'antd';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { pluginList } from '@/services/ant-design-pro/plugin';
 import { history } from 'umi';
-import {  deletePlugin } from '@/services/ant-design-pro/script';
+import { deletePlugin } from '@/services/ant-design-pro/script';
 
 type Item = {
 
@@ -110,22 +109,22 @@ const app: React.FC = () => {
             //   查看
             // </a>,
             <a
-            key="view"
-            onClick={async () => {
-              history.push(`/scripts/${record.uniqueKey}`);
-            }}
-          >
-            查看
-          </a>,
+              key="view"
+              onClick={async () => {
+                history.push(`/scripts/${record.uniqueKey}`);
+              }}
+            >
+              查看
+            </a>,
             <a
               key="delete"
               target="_blank"
               onClick={async () => {
                 // console.log("删除数据", record)
-                deletePlugin(record.uniqueKey).finally(function() {
+                deletePlugin(record.uniqueKey).finally(function () {
                   // 返回状态为 (resolved 或 rejected)
                   action?.reload()
-               })
+                })
               }}
             >
               删除
