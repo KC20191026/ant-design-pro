@@ -1,7 +1,11 @@
 export default {
   'menu.welcome': '首页简介',
   'menu.more-blocks': '更多区块',
-  'menu.home': '首页',
+  'menu.home': '首页',  
+  'menu.system': '系统配置',
+  'menu.system.basic': '基础配置',
+  'menu.system.adapter': '聊天配置',
+  'menu.system.rebate': '返利配置',
   'menu.store': '存储管理',
   'menu.master': '权限管理',
   'menu.reply': '自动回复',

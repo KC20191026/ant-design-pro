@@ -16,19 +16,6 @@ const Welcome: React.FC = () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
 
-  masterList().then((data) => {
-    let array = data.data
-    let list: DataSourceType[] = []
-    if (array) {
-      for (let index = 0; index < array?.length; index++) {
-        const element = array[index];
-        list.push({ id: index + 1, from: element.name, code: element.value })
-      }
-    }
-    if (dataSource.length === 0)
-      setDataSource(list)
-  })
-
   const columns: ProColumns<DataSourceType>[] = [
     {
       title: '编号',
@@ -97,11 +84,19 @@ const Welcome: React.FC = () => {
         loading={false}
 
         columns={columns}
-        // request={async () => ({
-        //   data: defaultData,
-        //   total: 3,
-        //   success: true,
-        // })}
+        request={(params, sorter, filter) => {
+          masterList().then((data) => {
+            let array = data.data;
+            let list: DataSourceType[] = [];
+            if (array) {
+              for (let index = 0; index < array?.length; index++) {
+                const element = array[index];
+                list.push({ id: index + 1, from: element.name, code: element.value });
+              }
+            }
+            setDataSource(list);
+          })
+        }}
         value={dataSource}
         onChange={setDataSource}
         editable={{

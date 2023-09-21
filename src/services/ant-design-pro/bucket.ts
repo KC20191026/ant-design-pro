@@ -34,6 +34,25 @@ export async function carryList(options?: {}) {
   });
 }
 
+/** 批量获取数据 GET /api/storage */
+export async function getStorage(keys: string, options?: {}) {
+  return request<{ data: any; }>('/api/storage?keys=' + keys, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 批量修改数据 GET /api/storage */
+export async function setStorage(body: {}, options?: {}) {
+  return request<{
+    status: number; data: any; 
+}>('/api/storage', {
+    method: 'PUT',
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 修改一条数据 POST /api/bucket/:name */
 export async function editBucketName(body: {}, options?: {}) {
   return request<{

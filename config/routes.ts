@@ -52,6 +52,28 @@ export default [
   //   component: './TableList',
   // },
   {
+    name: 'system',
+    path: '/system',
+    icon: 'settingOutlined',
+    routes: [
+      {
+        name: 'basic',
+        path: '/system/basic',
+        component: './System/Basic',
+      },
+      {
+        name: 'adapter',
+        path: '/system/adapter',
+        component: './System/Adapter',
+      },
+      {
+        name: 'rebate',
+        path: '/system/rebate',
+        component: './System/Rebate',
+      },
+    ]
+  },
+  {
     name: 'store',
     path: '/config',
     icon: 'database',

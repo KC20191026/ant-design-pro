@@ -146,7 +146,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           {children}
 
           <FloatButton
-            shape="circle"
+            shape="square"
             type="primary"
             style={{ right: 94 }}
             onClick={() => {

@@ -16,22 +16,7 @@ const Welcome: React.FC = () => {
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
-
-  let name = "groupWhitelist"
-  bucketNameList(name).then(data => {
-    let array = data.data
-    let list: DataSourceType[] = []
-    if (array) {
-      for (let index = 0; index < array?.length; index++) {
-        const element = array[index];
-        const from = element.key.split(':')[0]
-        const id = element.key.split(':')[1]
-        list.push({ id: id, from: from, name: name, enable: element.value })
-      }
-    }
-    if (dataSource.length === 0)
-      setDataSource(list)
-  })
+  const name = "groupWhitelist"
 
   const columns: ProColumns<DataSourceType>[] = [
     {
@@ -115,11 +100,21 @@ const Welcome: React.FC = () => {
         loading={false}
 
         columns={columns}
-        // request={async () => ({
-        //   data: defaultData,
-        //   total: 3,
-        //   success: true,
-        // })}
+        request={(params, sorter, filter) => {
+          bucketNameList(name).then(data => {
+            let array = data.data
+            let list: DataSourceType[] = []
+            if (array) {
+              for (let index = 0; index < array?.length; index++) {
+                const element = array[index];
+                const from = element.key.split(':')[0]
+                const id = element.key.split(':')[1]
+                list.push({ id: id, from: from, name: name, enable: element.value })
+              }
+            }
+            setDataSource(list)
+          })
+        }}
         value={dataSource}
         onChange={setDataSource}
         editable={{

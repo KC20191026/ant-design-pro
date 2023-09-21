@@ -16,21 +16,7 @@ const Welcome: React.FC = () => {
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>('bottom');
-
-  let name = "autoReplyInfo"
-  bucketNameList(name).then(data => {
-    let array = data.data
-    let list: DataSourceType[] = []
-    if (array) {
-      for (let index = 0; index < array?.length; index++) {
-        const element = array[index];
-        const value = element.value
-        list.push({ id: element.key, code: value.groupId, from: value.from, listen: value.listen, reply: value.reply })
-      }
-    }
-    if (dataSource.length === 0)
-      setDataSource(list)
-  })
+  const name = "autoReplyInfo"
 
   const columns: ProColumns<DataSourceType>[] = [
     {
@@ -99,11 +85,20 @@ const Welcome: React.FC = () => {
         loading={false}
 
         columns={columns}
-        // request={async () => ({
-        //   data: defaultData,
-        //   total: 3,
-        //   success: true,
-        // })}
+        request={(params, sorter, filter) => {
+          bucketNameList(name).then(data => {
+            let array = data.data
+            let list: DataSourceType[] = []
+            if (array) {
+              for (let index = 0; index < array?.length; index++) {
+                const element = array[index];
+                const value = element.value
+                list.push({ id: element.key, code: value.groupId, from: value.from, listen: value.listen, reply: value.reply })
+              }
+            }
+            setDataSource(list)
+          })
+        }}
         value={dataSource}
         onChange={setDataSource}
         editable={{

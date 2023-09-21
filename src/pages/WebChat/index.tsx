@@ -8,6 +8,8 @@ import '@chatui/core/dist/index.css';
 // 引入定制的样式
 import './chatui-theme.css';
 
+const randomString = Math.random().toString(36).substr(2, 12);
+
 const IM = () => {
   const { messages, appendMsg, setTyping } = useMessages([]);
   const [dynamicQuickReplies, setDynamicQuickReplies] = useState([]);
@@ -21,15 +23,16 @@ const IM = () => {
     }
     try {
       str = JSON.parse(str)
-      if (str?.type == 'text') {
+      if (str?.type == 'text')
         return [null, str.msg]
-      } else if (str?.type == 'image') {
+      else if (str?.type == 'image')
         return [[`[CQ:image,file=${str.path}\]`], '']
-      } else if (str?.type == 'video') {
+      else if (str?.type == 'video')
         return [[`[CQ:video,file=${str.path}\]`], '']
-      } else if (str?.type == 'audio') {
+      else if (str?.type == 'audio')
         return [[`[CQ:audio,file=${str.path}\]`], '']
-      }
+      else
+        return [null, '']
     } catch (e) { }
     return [null, str]
   }
@@ -79,8 +82,7 @@ const IM = () => {
     }
 
   }
-
-  let webSocketAddr = process.env.NODE_ENV === 'production' ? `ws://${window.location.host}/api/ws` : `ws://localhost:9090/api/ws`
+  let webSocketAddr = process.env.NODE_ENV === 'production' ? `ws://${window.location.host}/api/ws` : `ws://localhost:9090/api/ws` + `?rid=${randomString}`
   const ws = new WebSocket(webSocketAddr);
   ws.onopen = function (e) {
     console.log('连接上 ws 服务端了');
@@ -105,7 +107,7 @@ const IM = () => {
   }
 
   function handleSend(type: string, val: string) {
-    if (type === 'text' && val.trim()) {
+    if (type === 'text' && val?.trim()) {
       setDynamicQuickReplies([{ name: val }, ...dynamicQuickReplies])
       appendMsg({
         type: 'text',
@@ -121,7 +123,7 @@ const IM = () => {
     }
   }
 
-  function renderMessageContent(msg: { type: any; content: any; }) {
+  function renderMessageContent(msg: any) {
     const { type, content } = msg;
 
     // 根据消息类型来渲染

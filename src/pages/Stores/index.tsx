@@ -10,7 +10,6 @@ type DataSourceType = {
   name: string;
   key?: string;
   value?: any;
-  type: string;
 };
 
 function onSelect(name: any, setName: any, setDataSource: any) {
@@ -25,7 +24,7 @@ function onSelect(name: any, setName: any, setDataSource: any) {
       for (let index = 0; index < array?.length; index++) {
         const element = array[index];
         // console.log(element)
-        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: typeof element.value == 'string' ? element.value : JSON.stringify(element.value), type: typeof element.value })
+        list.push({ id: (Math.random() * 1000000).toFixed(0), num: index + 1, name: name, key: element.key, value: typeof element.value == 'string' ? element.value : JSON.stringify(element.value) })
       }
     }
     setDataSource(list)
@@ -40,19 +39,6 @@ const Welcome: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [selectedValue, setSelectedValue] = useState(undefined);
-
-  bucketList().then((data) => {
-    let array = data.data
-    let list = []
-    for (let index = 0; index < array?.length; index++) {
-      const element = array[index]
-      list.push({ value: index, name: element, label: `[桶] ${element}` })
-    }
-    if (options.length === 0) {
-      setOptions(list)
-    }
-
-  })
 
   const columns: ProColumns<DataSourceType>[] = [
     {
@@ -139,6 +125,19 @@ const Welcome: React.FC = () => {
         filterSort={(optionA, optionB) =>
           (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
         }
+        onClick={() => {
+          bucketList().then((data) => {
+            let array = data.data
+            let list = []
+            for (let index = 0; index < array?.length; index++) {
+              const element = array[index]
+              list.push({ value: index, name: element, label: `[桶] ${element}` })
+            }
+            if (options.length === 0) {
+              setOptions(list)
+            }
+          })
+        }}
         onSelect={
           (value, option) => {
             setSelectedValue(option.name)
@@ -157,7 +156,7 @@ const Welcome: React.FC = () => {
           x: 960,
         }}
         recordCreatorProps={{
-          record: { id: (Math.random() * 1000000).toFixed(0), name: name, num: dataSource.length + 1, type: '' },
+          record: { id: (Math.random() * 1000000).toFixed(0), name: name, num: dataSource.length + 1 },
         }}
         loading={false}
         columns={columns}
@@ -174,7 +173,7 @@ const Welcome: React.FC = () => {
           onSave: async (rowKey, data, row) => {
             // console.log(rowKey, data, row);
             let list = []
-            if (data.type == 'object') data.value = JSON.parse(data.value)
+            // if (data.type == 'object') data.value = JSON.parse(data.value)
             if (data.key != row.key || data.name != row.name) {
               list = [{ name: row.name, key: row.key, value: '' }, { name: data.name, key: data.key, value: data.value }]
             } else {
