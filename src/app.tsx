@@ -14,7 +14,7 @@ const loginPath = '/user/login';
 import { FloatButton, Drawer } from 'antd';
 import { CustomerServiceOutlined } from '@ant-design/icons';
 import IM from './pages/WebChat';
-
+import routes from '../config/routes';
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -53,6 +53,11 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  // routes?.forEach(menu => {
+  //   if (menu.name == 'scripts') {
+  //     menu.routes = [...menu.routes, ...initialState?.currentUser?.plugins];
+  //   }
+  // })
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -103,7 +108,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       : [],
     menuHeaderRender: undefined,
     menuContentRender: (props, defaultDom) => {
-      // console.log(props.menuData)
+      console.log(props.menuData)
       props.menuData?.forEach(menu => {
         if (menu.path == '/scripts') {
           let id = menu.children?.[0].id
@@ -115,7 +120,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 path: p.path,
                 key: p.path,
                 name: p.name,
-                layout: true,
+                locale: false,
+                layout: false,
                 parentId: menu.children?.[0].parentId,
                 pro_layout_parentKeys: menu.children?.[0].pro_layout_parentKeys,
                 unaccessible: false,
@@ -123,7 +129,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           });
         }
       });
-      return defaultDom
+    return defaultDom
     },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
