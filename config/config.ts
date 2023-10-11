@@ -151,6 +151,7 @@ export default defineConfig({
   mfsu: {
     strategy: 'normal',
   },
+  esbuildMinifyIIFE: true,
   requestRecord: {},
   // base: process.env.NODE_ENV === 'production' ? '/admin/' : '/',
   // publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/'
