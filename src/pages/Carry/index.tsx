@@ -47,12 +47,12 @@ const Welcome: React.FC = () => {
     }]
 
   const columns: ProColumns[] = [
-    {
-      title: '编号',
-      dataIndex: 'id',
-      key: 'id',
-      // render: (text) => <a>{text}</a>,
-    },
+    // {
+    //   title: '编号',
+    //   dataIndex: 'id',
+    //   key: 'id',
+    //   // render: (text) => <a>{text}</a>,
+    // },
     {
       title: '群组ID',
       dataIndex: 'chat_id',
@@ -128,26 +128,7 @@ const Welcome: React.FC = () => {
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => {
-            formRef?.current?.setFieldsValue({
-              id: record.id,
-              in: record.in,
-              out: record.out,
-              from: record.from,
-              allowed: record.allowed,
-              prohibited: record.prohibited,
-              chat_id: record.chat_id,
-              chat_name: record.chat_name,
-              remark: record.remark,
-              enable: record.enable,
-              platform: record.platform,
-              include: record.include,
-              exclude: record.exclude,
-              created_at: record.created_at,
-              bots_id: record.bots_id,
-              scripts: record.scripts,
-              deduplication: record.deduplication,
-              deduplication2: record.deduplication2,
-            });
+            formRef.current?.setFieldsValue(record);
             handleModalOpen(true);
           }}
           >编辑</a>
@@ -178,9 +159,12 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        children: '搬运群组',
+      }}>
       <div>
-        <Button onClick={() => { formRef?.current?.setFieldsValue(null); handleModalOpen(true); }} type="primary" style={{ marginBottom: 16 }}>
+        <Button onClick={() => { formRef.current?.resetFields([]); handleModalOpen(true); }} type="primary" style={{ marginBottom: 16 }}>
           + 新建一行
         </Button>
         <ProTable
@@ -217,10 +201,7 @@ const Welcome: React.FC = () => {
       >
         <ProForm
           title="新建表单"
-          submitter={{
-            // 这里可以进行自定义配置
-            render: () => null, // 清空按钮
-          }}
+          submitter={false}
           formRef={formRef}>
 
           <ProFormText

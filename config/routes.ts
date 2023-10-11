@@ -61,16 +61,6 @@ export default [
         path: '/system/basic',
         component: './System/Basic',
       },
-      {
-        name: 'adapter',
-        path: '/system/adapter',
-        component: './System/Adapter',
-      },
-      {
-        name: 'rebate',
-        path: '/system/rebate',
-        component: './System/Rebate',
-      },
     ]
   },
   {

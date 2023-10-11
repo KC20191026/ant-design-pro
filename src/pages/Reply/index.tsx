@@ -5,6 +5,7 @@ import { message } from 'antd';
 
 
 type DataSourceType = {
+  num: number,
   id: React.Key;
   from?: string;
   listen?: string;
@@ -20,6 +21,10 @@ const Welcome: React.FC = () => {
 
   const columns: ProColumns<DataSourceType>[] = [
     {
+      title: '序号',
+      dataIndex: 'num',
+    },
+    {
       title: '平台',
       dataIndex: 'from',
     },
@@ -30,6 +35,7 @@ const Welcome: React.FC = () => {
     },
     {
       title: '触发词',
+      tooltip: '支持正则表达式。',
       dataIndex: 'listen',
     },
     {
@@ -67,7 +73,10 @@ const Welcome: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        children: '回复列表',
+      }}>
       <EditableProTable<DataSourceType>
         rowKey="id"
         headerTitle=""
@@ -93,7 +102,7 @@ const Welcome: React.FC = () => {
               for (let index = 0; index < array?.length; index++) {
                 const element = array[index];
                 const value = element.value
-                list.push({ id: element.key, code: value.groupId, from: value.from, listen: value.listen, reply: value.reply })
+                list.push({ num: (index + 1), id: element.key, code: value.groupId, from: value.from, listen: value.listen, reply: value.reply })
               }
             }
             setDataSource(list)

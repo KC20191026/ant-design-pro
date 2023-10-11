@@ -66,7 +66,10 @@ const Welcome: React.FC = () => {
   ];
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        children: '管理员列表',
+      }}>
       <EditableProTable<DataSourceType>
         rowKey="id"
         headerTitle=""
@@ -85,7 +88,7 @@ const Welcome: React.FC = () => {
 
         columns={columns}
         request={(params, sorter, filter) => {
-          masterList().then((data) => {
+          return new Promise(_any => masterList().then((data) => {
             let array = data.data;
             let list: DataSourceType[] = [];
             if (array) {
@@ -95,7 +98,7 @@ const Welcome: React.FC = () => {
               }
             }
             setDataSource(list);
-          })
+          }))
         }}
         value={dataSource}
         onChange={setDataSource}

@@ -115,7 +115,10 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        subTitle: 'tips：删除存储桶 empty ?',
+      }}>
       <Select
         showSearch
         style={{ width: 200 }}

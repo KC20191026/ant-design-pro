@@ -101,7 +101,7 @@ const Welcome: React.FC = () => {
 
         columns={columns}
         request={(params, sorter, filter) => {
-          bucketNameList(name).then(data => {
+          return new Promise(_any => bucketNameList(name).then(data => {
             let array = data.data
             let list: DataSourceType[] = []
             if (array) {
@@ -113,7 +113,7 @@ const Welcome: React.FC = () => {
               }
             }
             setDataSource(list)
-          })
+          }))
         }}
         value={dataSource}
         onChange={setDataSource}
